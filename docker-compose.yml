@@ -1,0 +1,39 @@
+version: "3.5"
+
+services:
+  nginx:
+    image: faraks01/teya-chem-frontend-production:latest
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
+    volumes:
+      - ./nginx/conf/:/etc/nginx/conf.d/:ro
+      - ./certbot/www:/var/www/certbot/:ro
+    networks:
+      - teya_local
+
+  django:
+    image: faraks01/teya-chem-backend:latest
+    ports:
+      - 8000:8000
+    restart: unless-stopped
+    networks:
+      - teya_local
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
+    depends_on:
+      - nginx
+    networks:
+      - teya_local
+    command: certbot certonly --webroot --webroot-path /var/www/certbot/ --email faraks01@gmail.com --agree-tos -d teya-chem.ru -d www.teya-chem.ru
+
+
+networks:
+  teya_local:
+    name: teya_local
+    driver: bridge
