@@ -38,8 +38,14 @@ docker compose run --rm --entrypoint "\
 echo
 
 
-echo "### Starting nginx ..."
-docker compose up --force-recreate -d one_time_nginx
+echo "### Starting one time nginx container ..."
+docker run -d --name one_time_nginx \
+  -p 80:80 \
+  -v $(pwd)/nginx/conf/init_nginx.conf:/etc/nginx/conf.d/nginx.conf:ro \
+  -v $(pwd)/certbot/www:/var/www/certbot/:ro \
+  -v $(pwd)/certbot/conf:/etc/letsencrypt/:ro \
+  --network teya_local \
+  nginx:latest
 echo
 
 echo "### Deleting dummy certificate for $domains ..."
@@ -76,5 +82,5 @@ docker compose run --rm --entrypoint "\
     --force-renewal" certbot
 echo
 
-echo "### Reloading nginx ..."
-docker compose exec one_time_nginx nginx -s reload
+echo "### Removing one time nginx container ..."
+docker stop one_time_nginx && docker rm one_time_nginx
