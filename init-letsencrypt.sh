@@ -1,9 +1,9 @@
 #!/bin/bash
 
-if ! [[ $(docker compose version) == *"Docker Compose version v"* ]]; then
-  echo 'Error: docker compose is not installed.' >&2
-  exit 1
-fi
+#if ! [[ $(docker compose version) == *"Docker Compose version v"* ]]; then
+#  echo 'Error: docker compose is not installed.' >&2
+#  exit 1
+#fi
 
 domains=(teya-chem.ru www.teya-chem.ru)
 rsa_key_size=4096
