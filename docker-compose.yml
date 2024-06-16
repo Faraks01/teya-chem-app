@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   nginx:
-    image: faraks01/teya-chem-frontend-production:01
+    image: faraks01/teya-chem-frontend-production:latest
     ports:
       - "80:80"
       - "443:443"
